@@ -10,3 +10,5 @@ var app = builder.Build();
 app.MapControllers();
 
 app.Run("http://0.0.0.0:5000");
+
+builder.Services.AddHostedService<LoadGenerator>();
