@@ -1,24 +1,28 @@
-version: '3.8'
+version: "3.8"
 
 services:
+
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+    container_name: dotnet-backend
     ports:
       - "5000:5000"
-    container_name: dotnet-backend
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:5000
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+    container_name: react-frontend
     ports:
       - "3000:80"
-    container_name: react-frontend
-    depends_on:
-      - backend
 
   otel-collector:
-  image: otel/opentelemetry-collector:latest
-  volumes:
-    - ./otel-collector-config.yaml:/etc/otelcol/config.yaml
-  command: ["--config=/etc/otelcol/config.yaml"]
-  ports:
-    - "4317:4317"    
+    image: otel/opentelemetry-collector:latest
+    container_name: otel-collector
+    command: ["--config=/etc/otelcol/config.yaml"]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otelcol/config.yaml
+    ports:
+      - "4317:4317"
