@@ -5,11 +5,19 @@ public class LoadGenerator : BackgroundService
     private readonly HttpClient _httpClient = new();
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+{
+    while (!stoppingToken.IsCancellationRequested)
     {
-        while (!stoppingToken.IsCancellationRequested)
+        try
         {
-            await _httpClient.GetAsync("http://localhost:5000/api/hello");
-            await Task.Delay(1000, stoppingToken);
+            await _httpClient.GetAsync("http://backend:5000/api/load");
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Load error: {ex.Message}");
+        }
+
+        await Task.Delay(1000);
     }
+}
 }
